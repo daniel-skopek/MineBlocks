@@ -5,7 +5,6 @@ import cz.raixo.blocks.integration.Integration;
 import cz.raixo.blocks.integration.models.placeholder.PlaceholderProvider;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 
 public class PAPIIntegration implements Integration, PlaceholderProvider {
 

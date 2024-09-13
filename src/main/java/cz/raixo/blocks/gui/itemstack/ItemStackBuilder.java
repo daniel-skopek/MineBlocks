@@ -102,7 +102,7 @@ public class ItemStackBuilder {
     public ItemStackBuilder shiny() {
         return
                 addItemFlags(ItemFlag.HIDE_ENCHANTS)
-                        .withEnchantment(Enchantment.DURABILITY, 1);
+                        .withEnchantment(Enchantment.UNBREAKING, 1);
 
     }
 
