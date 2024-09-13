@@ -44,7 +44,10 @@ public class BlockCoolDown {
         this.active = new ActiveCoolDown(
                 end,
                 future,
-                Bukkit.getScheduler().runTaskLater(block.getPlugin(), this::deactivate, TimeUnit.SECONDS.convert(remaining, TimeUnit.MILLISECONDS) * 20L),
+                Bukkit.getScheduler().runTaskLater(block.getPlugin(), () -> {
+                    deactivate();
+                    block.broadcast(respawnMessage);
+                }, TimeUnit.SECONDS.convert(remaining, TimeUnit.MILLISECONDS) * 20L),
                 Bukkit.getScheduler().runTaskTimer(block.getPlugin(), () -> block.getHologram().update(), 0, 20)
         );
         return active;
@@ -56,7 +59,6 @@ public class BlockCoolDown {
         active.getUpdateTask().cancel();
         active.getFuture().complete(null);
         block.getType().setOverride(null);
-        block.broadcast(respawnMessage);
         this.active = null;
         block.getHologram().update();
         return true;
