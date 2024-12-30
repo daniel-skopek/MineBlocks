@@ -62,7 +62,12 @@ public class MineBlocksPlaceholders extends PlaceholderExpansion {
         } else switch (value) {
             case "hp": return String.valueOf(block.getHealth().getHealth());
             case "max_hp": return String.valueOf(block.getHealth().getMaxHealth());
-            case "breaks": return String.valueOf(
+            case "breaks":
+                if (player == null) {
+                    return String.valueOf(0);
+                }
+
+                return String.valueOf(
                     Optional.ofNullable(
                                     block.getPlayerDataMap().get(player.getUniqueId()))
                             .map(PlayerData::getBreaks)
