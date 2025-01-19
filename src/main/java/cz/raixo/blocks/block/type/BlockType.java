@@ -3,6 +3,7 @@ package cz.raixo.blocks.block.type;
 import cz.raixo.blocks.block.MineBlock;
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.util.Optional;
@@ -31,6 +32,7 @@ public class BlockType {
     }
 
     public void update() {
+        Bukkit.getLogger().info("[MineBlocks] BlockType.update(): Updating block " + block.getId());
         block.getLocation().getBlock().setType(get(), false);
         block.getHologram().update();
     }
