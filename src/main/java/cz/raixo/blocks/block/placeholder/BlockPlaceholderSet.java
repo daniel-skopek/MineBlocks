@@ -42,7 +42,7 @@ public class BlockPlaceholderSet extends PlaceholderSet {
         addPlaceholder("max_health", () -> String.valueOf(block.getHealth().getMaxHealth()));
         addPlaceholder("timeout", () -> {
             BlockCoolDown coolDown = block.getCoolDown();
-            if (!coolDown.isActive()) return "";
+            if (!coolDown.isActive()) return "§7(neznámo)";
             return block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
         });
     }
