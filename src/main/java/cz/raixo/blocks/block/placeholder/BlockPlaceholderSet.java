@@ -7,6 +7,7 @@ import cz.raixo.blocks.block.top.BlockTop;
 import cz.raixo.blocks.config.MineBlocksConfig;
 import cz.raixo.blocks.integration.models.prefix.PrefixProvider;
 import cz.raixo.blocks.util.placeholders.PlaceholderSet;
+import org.bukkit.Bukkit;
 
 public class BlockPlaceholderSet extends PlaceholderSet {
 
@@ -43,6 +44,7 @@ public class BlockPlaceholderSet extends PlaceholderSet {
         addPlaceholder("timeout", () -> {
             BlockCoolDown coolDown = block.getCoolDown();
             if (!coolDown.isActive()) return "§7(neznámo)";
+            Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Block " + block.getId() + " cooldown: " + coolDown.getActive().getEnd());
             return block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
         });
     }
