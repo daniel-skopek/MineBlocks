@@ -49,6 +49,7 @@ public class BlockPlaceholderSet extends PlaceholderSet {
 
             if (timeoutFormatted.isEmpty()) {
                 Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Cooldown for block " + block.getId() + " is empty! " + coolDown.getActive().getEnd() + " (Formatted: " + timeoutFormatted + ")");
+                return "§7(error cause found)";
             }
 
             return timeoutFormatted;
