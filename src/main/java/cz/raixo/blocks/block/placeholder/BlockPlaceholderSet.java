@@ -44,8 +44,14 @@ public class BlockPlaceholderSet extends PlaceholderSet {
         addPlaceholder("timeout", () -> {
             BlockCoolDown coolDown = block.getCoolDown();
             if (!coolDown.isActive()) return "§7(neznámo)";
-            Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Block " + block.getId() + " cooldown: " + coolDown.getActive().getEnd());
-            return block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
+
+            String timeoutFormatted = block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
+
+            if (timeoutFormatted.isEmpty()) {
+                Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Cooldown for block " + block.getId() + " is empty! " + coolDown.getActive().getEnd() + " (Formatted: " + timeoutFormatted + ")");
+            }
+
+            return timeoutFormatted;
         });
     }
 
