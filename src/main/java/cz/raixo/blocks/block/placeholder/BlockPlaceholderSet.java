@@ -43,14 +43,11 @@ public class BlockPlaceholderSet extends PlaceholderSet {
         addPlaceholder("max_health", () -> String.valueOf(block.getHealth().getMaxHealth()));
         addPlaceholder("timeout", () -> {
             BlockCoolDown coolDown = block.getCoolDown();
-            if (!coolDown.isActive()) return "§7(neznámo)";
+            if (!coolDown.isActive()) return "";
 
             String timeoutFormatted = block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
 
-            if (timeoutFormatted.isEmpty()) {
-                Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Cooldown for block " + block.getId() + " is empty! " + coolDown.getActive().getEnd() + " (Formatted: " + timeoutFormatted + ")");
-                return "§7(error cause found)";
-            }
+            Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Cooldown for block " + block.getId() + " " + coolDown.getActive().getEnd() + " (Formatted: '" + timeoutFormatted + "')");
 
             return timeoutFormatted;
         });
