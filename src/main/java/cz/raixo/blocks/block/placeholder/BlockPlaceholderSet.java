@@ -47,7 +47,9 @@ public class BlockPlaceholderSet extends PlaceholderSet {
 
             String timeoutFormatted = block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
 
-            Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Cooldown for block " + block.getId() + " " + coolDown.getActive().getEnd() + " (Formatted: '" + timeoutFormatted + "')");
+            if (!(timeoutFormatted.contains("h") || timeoutFormatted.contains("m") || timeoutFormatted.contains("s"))) {
+                Bukkit.getLogger().info("[MineBlocks] BlockPlaceholderSet.BlockPlaceholderSet(): Cooldown for block " + block.getId() + " " + coolDown.getActive().getEnd() + " (Formatted: '" + timeoutFormatted + "')");
+            }
 
             return timeoutFormatted;
         });
