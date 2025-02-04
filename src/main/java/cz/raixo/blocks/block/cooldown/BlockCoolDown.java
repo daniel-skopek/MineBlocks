@@ -38,6 +38,7 @@ public class BlockCoolDown {
     public ActiveCoolDown activate(Date end) {
         deactivate();
         long remaining = end.getTime() - System.currentTimeMillis();
+
         if (remaining <= 0) return null;
         block.getType().setOverride(typeOverride);
         CompletableFuture<Void> future = new CompletableFuture<>();
@@ -50,6 +51,7 @@ public class BlockCoolDown {
                 }, TimeUnit.SECONDS.convert(remaining, TimeUnit.MILLISECONDS) * 20L),
                 Bukkit.getScheduler().runTaskTimer(block.getPlugin(), () -> block.getHologram().update(), 0, 20)
         );
+
         return active;
     }
 

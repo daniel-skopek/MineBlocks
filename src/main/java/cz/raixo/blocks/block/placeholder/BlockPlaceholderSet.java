@@ -43,6 +43,7 @@ public class BlockPlaceholderSet extends PlaceholderSet {
         addPlaceholder("timeout", () -> {
             BlockCoolDown coolDown = block.getCoolDown();
             if (!coolDown.isActive()) return "";
+
             return block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
         });
     }
