@@ -17,7 +17,6 @@ import cz.raixo.blocks.util.color.Colors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -77,7 +76,6 @@ public class MineBlock {
     }
 
     public void show() {
-        Bukkit.getLogger().info("[MineBlocks] MineBlock.show(): Showing block " + getId());
         hologram.show();
         type.update();
         hologram.update();
@@ -95,7 +93,6 @@ public class MineBlock {
     }
 
     public void reset() {
-        Bukkit.getLogger().info("[MineBlocks] MineBlock.reset(): Resetting block " + getId());
         health.reset();
         playerDataMap.clear();
         resetOptions.cancelInactive();
