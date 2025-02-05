@@ -1,6 +1,7 @@
 package cz.raixo.blocks.config.lang;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Date;
@@ -52,7 +53,10 @@ public class LangConfig {
         if (unitSection == null) return "Invalid timeout configuration";
 
         long relative = end.getTime() - System.currentTimeMillis();
-        if (relative <= 0) return "Expired";
+        if (relative < 0) {
+            Bukkit.getLogger().info("[MineBlocks] getTimeoutFormatted(): End Date " + end + " (Relative < 0) " + end.getTime() + " - " + System.currentTimeMillis());
+            relative = 0;
+        }
 
         long hours = relative / HOUR_MS;
         relative %= HOUR_MS;
