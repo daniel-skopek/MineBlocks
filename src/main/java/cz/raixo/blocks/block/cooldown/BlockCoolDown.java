@@ -40,6 +40,9 @@ public class BlockCoolDown {
         long remaining = end.getTime() - System.currentTimeMillis();
 
         if (remaining <= 0) return null;
+
+        Bukkit.getLogger().info("[MineBlocks] activate(): Block " + block.getId() + ": End Date " + end + " " + end.getTime() + " - " + System.currentTimeMillis() + " (remaining "  + remaining + ")");
+
         block.getType().setOverride(typeOverride);
         CompletableFuture<Void> future = new CompletableFuture<>();
         this.active = new ActiveCoolDown(
