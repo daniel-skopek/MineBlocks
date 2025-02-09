@@ -1,7 +1,6 @@
 package cz.raixo.blocks.config.lang;
 
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.util.Date;
@@ -58,7 +57,6 @@ public class LangConfig {
 
         long relative = end.getTime() - System.currentTimeMillis();
         if (relative < 0) {
-            Bukkit.getLogger().info("[MineBlocks] getTimeoutFormatted(): End Date " + end + " (Relative < 0) " + end.getTime() + " - " + System.currentTimeMillis());
             relative = 0;
         }
 
@@ -76,9 +74,8 @@ public class LangConfig {
         if (minutes > 0) {
             timeString.append(minutes).append(" ").append(unitSection.getString(minutes == 1 ? "minute" : "minutes", "minutes")).append(" ");
         }
-        if (seconds > 0 || timeString.isEmpty()) {
-            timeString.append(seconds).append(" ").append(unitSection.getString(seconds == 1 ? "second" : "seconds", "seconds"));
-        }
+
+        timeString.append(seconds).append(" ").append(unitSection.getString(seconds == 1 ? "second" : "seconds", "seconds"));
 
         return getTimeoutFormat().replace("%time%", timeString.toString().trim());
     }
