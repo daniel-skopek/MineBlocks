@@ -6,12 +6,12 @@ lang:
     message: "%time%"
     max-units: 2
     units:
-      hour: " hour"
-      hours: " hours"
-      minute: " minute"
-      minutes: " minutes"
-      second: " second"
-      seconds: " seconds"
+      hour: "hour"
+      hours: "hours"
+      minute: "minute"
+      minutes: "minutes"
+      second: "second"
+      seconds: "seconds"
   status:
     timeout: "&cYou can't destroy the block now!"
     afk: "&cYou are AFK!"
