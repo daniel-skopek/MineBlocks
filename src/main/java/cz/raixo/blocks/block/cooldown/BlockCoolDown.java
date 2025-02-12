@@ -41,6 +41,11 @@ public class BlockCoolDown {
 
         if (remaining <= 0) return null;
 
+        long oldTime = TimeUnit.SECONDS.convert(remaining, TimeUnit.MILLISECONDS) * 20L;
+        long newTime = remaining / 50L;
+
+        Bukkit.getLogger().info("[MineBlocks] activate(): Block " + block.getId() + ": End Date " + end + " " + end.getTime() + " - " + System.currentTimeMillis() + " (remaining "  + remaining + ") OLD: " + oldTime + " NEW: " + newTime);
+
         block.getType().setOverride(typeOverride);
         CompletableFuture<Void> future = new CompletableFuture<>();
         this.active = new ActiveCoolDown(
@@ -49,7 +54,7 @@ public class BlockCoolDown {
                 Bukkit.getScheduler().runTaskLater(block.getPlugin(), () -> {
                     deactivate();
                     block.broadcast(respawnMessage);
-                }, remaining / 50L),
+                }, newTime),
                 Bukkit.getScheduler().runTaskTimer(block.getPlugin(), () -> block.getHologram().update(), 0, 20)
         );
 

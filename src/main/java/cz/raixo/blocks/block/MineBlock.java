@@ -17,6 +17,7 @@ import cz.raixo.blocks.util.color.Colors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -106,9 +107,12 @@ public class MineBlock {
         message = new BlockPlaceholderSet(this).parse(message);
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             PlayerData playerData = playerDataMap.getOrDefault(player.getUniqueId(), new PlayerData(player.getUniqueId(), player.getName()));
-            player.sendMessage(Colors.colorize(
+            String finalMessage = Colors.colorize(
                     new PlayerDataPlaceholderSet(playerData).parse(message)
-            ));
+            );
+
+            player.sendMessage(finalMessage);
+            Bukkit.getConsoleSender().sendMessage(finalMessage);
         }
     }
 
