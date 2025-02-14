@@ -22,6 +22,7 @@ public class BlockCoolDown {
     private String respawnMessage;
     @Setter(AccessLevel.NONE)
     private ActiveCoolDown active;
+    private Integer respawnTaskID = null;
 
     public BlockCoolDown(MineBlock block, int time, Material typeOverride, String respawnMessage) {
         this.block = block;
@@ -41,29 +42,22 @@ public class BlockCoolDown {
 
         if (remaining <= 0) return null;
 
-        long oldTime = TimeUnit.SECONDS.convert(remaining, TimeUnit.MILLISECONDS) * 20L;
-        long newTime = remaining / 50L;
-
-        Bukkit.getLogger().info("[MineBlocks] activate(): Block " + block.getId() + ": End Date " + end + " " + end.getTime() + " - " + System.currentTimeMillis() + " (remaining "  + remaining + ") OLD: " + oldTime + " NEW: " + newTime);
-
         block.getType().setOverride(typeOverride);
         CompletableFuture<Void> future = new CompletableFuture<>();
         this.active = new ActiveCoolDown(
                 end,
                 future,
-                Bukkit.getScheduler().runTaskLater(block.getPlugin(), () -> {
-                    deactivate();
-                    block.broadcast(respawnMessage);
-                }, newTime),
                 Bukkit.getScheduler().runTaskTimer(block.getPlugin(), () -> block.getHologram().update(), 0, 20)
         );
+
+        block.getPlugin().getRespawnTaskManager().scheduleTask(this, block, end.getTime());
 
         return active;
     }
 
     public boolean deactivate() {
         if (!isActive()) return false;
-        active.getTask().cancel();
+        block.getPlugin().getRespawnTaskManager().cancelTask(respawnTaskID);
         active.getUpdateTask().cancel();
         active.getFuture().complete(null);
         block.getType().setOverride(null);

@@ -8,10 +8,9 @@ import cz.raixo.blocks.block.rewards.offline.OfflineRewardsStorage;
 import cz.raixo.blocks.commands.MBCommand;
 import cz.raixo.blocks.config.MineBlocksConfig;
 import cz.raixo.blocks.gui.Gui;
-import cz.raixo.blocks.integration.Integration;
 import cz.raixo.blocks.integration.IntegrationManager;
-import cz.raixo.blocks.integration.models.hologram.HologramProvider;
 import cz.raixo.blocks.listener.BlocksListener;
+import cz.raixo.blocks.managers.RespawnTaskManager;
 import cz.raixo.blocks.menu.BlockMenu;
 import cz.raixo.blocks.menu.listener.EditListener;
 import cz.raixo.blocks.util.VersionUtil;
@@ -43,6 +42,7 @@ public class MineBlocksPlugin extends JavaPlugin {
     private BukkitAudiences bukkitAudiences;
     private File storageFolder;
     private OfflineRewardsStorage offlineRewards;
+    private RespawnTaskManager respawnTaskManager;
 
     @Override
     public void onEnable() {
@@ -64,6 +64,7 @@ public class MineBlocksPlugin extends JavaPlugin {
             getServer().getPluginManager().registerEvents(new BlocksListener(this), this);
             load();
         }, 1L);
+        respawnTaskManager = new RespawnTaskManager(this);
     }
 
     private void load() {
@@ -90,17 +91,6 @@ public class MineBlocksPlugin extends JavaPlugin {
             if (VersionUtil.isHigherVersion(pluginVersion, s)) {
                 logInfo("Plugin is outdated! Current version is "+ s +", but the installed version is "+ pluginVersion + "! You can update using /mb update");
             }
-        }));
-
-        Metrics metrics = new Metrics(this, 13178);
-
-        metrics.addCustomChart(new Metrics.SingleLineChart("blocks", () -> blockRegistry.getBlocks().size()));
-        metrics.addCustomChart(new Metrics.SimplePie("hologram_plugin", () -> {
-            HologramProvider hologramProvider = integrationManager.getHologramProvider();
-            if (hologramProvider instanceof Integration) {
-                return ((Integration) hologramProvider).getPluginName();
-            }
-            return null;
         }));
     }
 

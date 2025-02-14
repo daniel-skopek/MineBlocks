@@ -14,7 +14,5 @@ public class ActiveCoolDown {
 
     private final Date end;
     private final CompletableFuture<Void> future;
-    private final BukkitTask task;
     private final BukkitTask updateTask;
-
 }
