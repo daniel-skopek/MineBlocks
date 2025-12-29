@@ -81,33 +81,46 @@ blocks:
       reward_name:
         type: top
         place: 1
-        commands:
-          - "10;give %player% diamond" # chance;command
-          - "100;give %player% iron_ingot"
+        actions:
+          10:
+            - "[command] give %player% diamond"
+            - "[message] &aYou received a diamond!"
+          100:
+            - "[command] give %player% iron_ingot"
+            - "[message] &aYou received iron ingot!"
       reward1:
         type: top
         place: 1-3
-        commands:
-          - "10;give %player% diamond" # chance;command
-          - "100;give %player% iron_ingot"
+        actions:
+          100:
+            - "[command] give %player% iron_nugget"
+            - "[message] &aYou received iron nugget!"
       reward2:
         type: break
         interval: 5 # every 5 breaks the player will receive reward
-        commands:
-          - "100;give %player% iron_nugget"
+        actions:
+          100:
+            - "[command] give %player% iron_nugget"
+            - "[message] &aYou received iron nugget!"
       reward3:
         type: break
         condition: less than 5
-        commands:
-          - "100;give %player% iron_nugget"
+        actions:
+          100:
+            - "[command] give %player% iron_nugget"
+            - "[message] &aYou received iron nugget!"
       reward4:
         type: break
         condition: last # player who breaks the block as last (before it has 0 health) will receive this reward
-        commands:
-          - "100;give %player% iron_nugget"
+        actions:
+          100:
+            - "[command] give %player% iron_nugget"
+            - "[message] &aYou received iron nugget!"
       reward5:
         type: break_count
         from: 10
         to: 50
-        commands:
-          - "100;give %player% iron_nugget"
+        actions:
+          100:
+            - "[command] give %player% iron_nugget"
+            - "[message] &aYou received iron nugget!"

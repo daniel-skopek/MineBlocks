@@ -47,7 +47,7 @@ public class AddCommandItem extends BlockMenuItem {
                     if (s != null) {
                         RewardCommands<? extends RewardEntry> commands = menu.getReward().getCommands();
                         if (commands instanceof RandomRewardCommands) {
-                            ((RandomRewardCommands) commands).addCommand(new RandomCommandEntry(s, 100));
+                            ((RandomRewardCommands) commands).addCommand(new RandomCommandEntry(s, null, 100));
                         } else if (commands instanceof BatchRewardCommands) {
                             ((BatchRewardCommands) commands).addCommand(new BatchCommandEntry(s));
                         } else Colors.send(player, "#DF2E38Could not create command, because target reward mode is not supported!");

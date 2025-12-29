@@ -3,10 +3,13 @@ package cz.raixo.blocks.block.rewards;
 import cz.raixo.blocks.block.MineBlock;
 import cz.raixo.blocks.block.playerdata.PlayerData;
 import cz.raixo.blocks.block.playerdata.placeholder.PlayerDataPlaceholderSet;
+import cz.raixo.blocks.block.rewards.commands.RewardEntry;
 import cz.raixo.blocks.block.rewards.context.RewardContext;
 import cz.raixo.blocks.block.rewards.offline.OfflineRewardsStorage;
+import cz.raixo.blocks.util.color.Colors;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 
@@ -51,16 +54,23 @@ public class BlockRewards {
             OfflinePlayer offlinePlayer = block.getPlugin().getServer().getOfflinePlayer(player.getUuid());
             for (Reward lastReward : lastRewards) {
                 if (lastReward.canGet(player, context)) {
-                    for (String rewardCmd : lastReward.getCommands().rewardPlayer(player, context)) {
-                        String cmd = parsePlaceholders(offlinePlayer, player, rewardCmd);
+                    for (RewardEntry rewardEntry : lastReward.getCommands().rewardPlayer(player, context)) {
+                        String cmd = parsePlaceholders(offlinePlayer, player, rewardEntry.getCommand());
+                        String message = rewardEntry.getMessage() != null ? parsePlaceholders(offlinePlayer, player, rewardEntry.getMessage()) : null;
                         if (offlineRewards && !player.isOnline()) {
                             try {
                                 offlineStorage.addCommand(player.getUuid(), cmd);
+                                // Currently offline storage doesn't support messages, we might want to add it later
                             } catch (IOException e) {
                                 new IllegalStateException("Can't give offline reward '" + cmd + "' to player " + player.getDisplayName(), e)
                                         .printStackTrace();
                             }
-                        } else toExecute.add(() -> dispatchCommand(cmd));
+                        } else {
+                            toExecute.add(() -> dispatchCommand(cmd));
+                            if (message != null && player.isOnline()) {
+                                toExecute.add(() -> Objects.requireNonNull(Bukkit.getPlayer(player.getUuid())).sendMessage(Colors.colorize(message)));
+                            }
+                        }
                     }
                 }
             }
@@ -79,10 +89,13 @@ public class BlockRewards {
         List<Runnable> toExecute = new LinkedList<>();
         for (Reward reward : rewards) {
             if (reward.canGet(player, context)) {
-                for (String rewardCmd : reward.getCommands().rewardPlayer(player, context)) {
-                    toExecute.add(() -> dispatchCommand(parsePlaceholders(
-                            offlinePlayer, player, rewardCmd
-                    )));
+                for (RewardEntry rewardEntry : reward.getCommands().rewardPlayer(player, context)) {
+                    String cmd = parsePlaceholders(offlinePlayer, player, rewardEntry.getCommand());
+                    String message = rewardEntry.getMessage() != null ? parsePlaceholders(offlinePlayer, player, rewardEntry.getMessage()) : null;
+                    toExecute.add(() -> dispatchCommand(cmd));
+                    if (message != null && player.isOnline()) {
+                        toExecute.add(() -> Objects.requireNonNull(Bukkit.getPlayer(player.getUuid())).sendMessage(Colors.colorize(message)));
+                    }
                 }
             }
         }

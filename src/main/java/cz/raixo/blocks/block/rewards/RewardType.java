@@ -25,7 +25,7 @@ public enum RewardType {
                     name,
                     NumberRange.parse(section.getString("place", "-1"))
                             .orElseThrow((Supplier<Throwable>) () -> new IllegalStateException("Invalid place in top reward named " + name)),
-                    RewardCommands.parse(section.getString("mode"), section.getStringList("commands"))
+                    RewardCommands.parse(section.getString("mode"), section.get("actions"))
             );
         }
 
@@ -34,7 +34,7 @@ public enum RewardType {
             if (reward instanceof TopReward) {
                 TopReward topReward = (TopReward) reward;
                 section.set("place", topReward.getRange().toString());
-                section.set("commands", topReward.getCommands().saveToList());
+                topReward.getCommands().save(section.createSection("actions"));
             }
         }
     },
@@ -58,7 +58,7 @@ public enum RewardType {
                     name,
                     condition
                             .orElseThrow((Supplier<Throwable>) () -> new IllegalStateException("Invalid interval/condition in break reward named " + name)),
-                    RewardCommands.parse(section.getString("mode"), section.getStringList("commands"))
+                    RewardCommands.parse(section.getString("mode"), section.get("actions"))
             );
         }
 
@@ -70,7 +70,7 @@ public enum RewardType {
                     section.set(
                             breakReward.getCondition() instanceof IntervalCondition ? "interval" : "condition", breakReward.getCondition().toString()
                     );
-                section.set("commands", breakReward.getCommands().saveToList());
+                breakReward.getCommands().save(section.createSection("actions"));
             }
         }
     },
@@ -85,7 +85,7 @@ public enum RewardType {
             return new BreakCountReward(
                     name,
                     new RangeNumber(from, to),
-                    RewardCommands.parse(section.getString("mode"), section.getStringList("commands"))
+                    RewardCommands.parse(section.getString("mode"), section.get("actions"))
             );
         }
 
@@ -95,7 +95,7 @@ public enum RewardType {
                 BreakCountReward breakCountReward = (BreakCountReward) reward;
                 section.set("from", breakCountReward.getRange().getMin());
                 section.set("to", breakCountReward.getRange().getMax());
-                section.set("commands", breakCountReward.getCommands().saveToList());
+                breakCountReward.getCommands().save(section.createSection("actions"));
             }
         }
     };
