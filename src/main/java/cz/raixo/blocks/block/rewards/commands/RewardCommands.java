@@ -5,13 +5,15 @@ import cz.raixo.blocks.block.rewards.commands.batch.BatchRewardCommands;
 import cz.raixo.blocks.block.rewards.commands.random.RandomRewardCommands;
 import cz.raixo.blocks.block.rewards.context.RewardContext;
 
+import org.bukkit.configuration.ConfigurationSection;
+
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
 public interface RewardCommands<T extends RewardEntry> {
 
-    static RewardCommands<? extends RewardEntry> parse(@Nullable String mode, List<String> commands) {
+    static RewardCommands<? extends RewardEntry> parse(@Nullable String mode, Object commands) {
         switch (Optional.ofNullable(mode).map(String::toLowerCase).orElse("")) {
             case "all":
                 return new BatchRewardCommands(commands);
@@ -24,11 +26,13 @@ public interface RewardCommands<T extends RewardEntry> {
 
     List<String> saveToList();
 
+    void save(ConfigurationSection section);
+
     void addCommand(T command);
 
     void removeCommand(RewardEntry command);
 
-    List<String> rewardPlayer(PlayerData player, RewardContext random);
+    List<RewardEntry> rewardPlayer(PlayerData player, RewardContext random);
 
     String getModeName();
 

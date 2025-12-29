@@ -11,6 +11,7 @@ import lombok.Setter;
 public class RandomCommandEntry implements RewardEntry {
 
     private final String command;
+    private final String message;
     private int chance;
 
 }
