@@ -1,9 +1,9 @@
 package cz.raixo.blocks.block.cooldown;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
@@ -14,5 +14,5 @@ public class ActiveCoolDown {
 
     private final Date end;
     private final CompletableFuture<Void> future;
-    private final BukkitTask updateTask;
+    private final WrappedTask updateTask;
 }

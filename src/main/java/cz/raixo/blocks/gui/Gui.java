@@ -1,5 +1,6 @@
 package cz.raixo.blocks.gui;
 
+import cz.raixo.blocks.MineBlocksPlugin;
 import cz.raixo.blocks.gui.filler.GuiFiller;
 import cz.raixo.blocks.gui.item.GuiItem;
 import cz.raixo.blocks.gui.item.GuiItemBuilder;
@@ -22,7 +23,6 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashSet;
@@ -33,28 +33,19 @@ import java.util.concurrent.ScheduledExecutorService;
 
 public class Gui<T extends GuiFiller<T>> implements InventoryHolder {
 
-    private static Plugin plugin;
+    private static MineBlocksPlugin plugin;
     private static final Executor DEFAULT_EXECUTOR = Executors.newCachedThreadPool();
     private static final ItemStack AIR = new ItemStack(Material.AIR);
     public static final LegacyComponentSerializer COMPONENT_SERIALIZER = BukkitComponentSerializer.legacy();
     public static final ScheduledExecutorService SCHEDULER = Executors.newSingleThreadScheduledExecutor();
-    public static void enable(Plugin plugin) {
-        if (Gui.plugin != null) return;
+    public static void enable(MineBlocksPlugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
         Gui.plugin = plugin;
     }
 
-    public static void disable() {
-        Gui.plugin = null;
-    }
-
-    public static Plugin getPlugin() {
-        return plugin;
-    }
-
     public static void runSync(Runnable runnable) {
         if (Bukkit.isPrimaryThread()) runnable.run();
-        else plugin.getServer().getScheduler().runTask(plugin, runnable);
+        else plugin.getFoliaLib().getScheduler().runLater(wrappedTask -> runnable.run(), 0L);
     }
 
     private final GuiMeta<T> meta;

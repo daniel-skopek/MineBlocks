@@ -112,16 +112,16 @@ public class BlocksListener implements Listener {
             });
         }
         if (plugin.getConfiguration().getOptionsConfig().hasOfflineRewards())
-            plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+            plugin.getFoliaLib().getScheduler().runAsync(wrappedTask -> {
                 try {
                     List<String> rewards = plugin.getOfflineRewards().getAndRemoveCommands(e.getPlayer().getUniqueId());
                     if (!rewards.isEmpty()) {
-                        plugin.getServer().getScheduler().runTask(plugin, () -> {
+                        plugin.getFoliaLib().getScheduler().runLater(() -> {
                             CommandSender sender = plugin.getServer().getConsoleSender();
                             for (String reward : rewards) {
                                 plugin.getServer().dispatchCommand(sender, reward);
                             }
-                        });
+                        }, 0L);
                     }
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);

@@ -2,6 +2,7 @@ package cz.raixo.blocks;
 
 import co.aikar.commands.BukkitCommandManager;
 import co.aikar.commands.MessageType;
+import com.tcoded.folialib.FoliaLib;
 import cz.raixo.blocks.acf.ColorsFormatter;
 import cz.raixo.blocks.block.MineBlock;
 import cz.raixo.blocks.block.rewards.offline.OfflineRewardsStorage;
@@ -43,9 +44,12 @@ public class MineBlocksPlugin extends JavaPlugin {
     private File storageFolder;
     private OfflineRewardsStorage offlineRewards;
     private RespawnTaskManager respawnTaskManager;
+    private FoliaLib foliaLib;
 
     @Override
     public void onEnable() {
+        foliaLib = new FoliaLib(this);
+
         storageFolder = new File(getDataFolder(), "storage");
         createFolders();
         offlineRewards = new OfflineRewardsStorage(storageFolder);
@@ -58,7 +62,7 @@ public class MineBlocksPlugin extends JavaPlugin {
             commandManager.setFormat(messageType, new ColorsFormatter());
         }
         commandManager.registerCommand(new MBCommand(this));
-        getServer().getScheduler().runTaskLater(this, () -> {
+        foliaLib.getScheduler().runLater(wrappedTask -> {
             editValuesListener = new EditListener(this);
             getServer().getPluginManager().registerEvents(editValuesListener, this);
             getServer().getPluginManager().registerEvents(new BlocksListener(this), this);
@@ -68,7 +72,7 @@ public class MineBlocksPlugin extends JavaPlugin {
     }
 
     private void load() {
-        configuration = new MineBlocksConfig(getConfig());
+        configuration = new MineBlocksConfig(this, getConfig());
         try {
             integrationManager = new IntegrationManager(this);
         } catch (IllegalStateException e) {
@@ -86,18 +90,17 @@ public class MineBlocksPlugin extends JavaPlugin {
                         .collect(Collectors.joining(", "))
         );
         logInfo("MineBlocks enabled successfully!");
-        getServer().getScheduler().runTask(this, () -> VersionUtil.getCurrentVersion().thenAccept(s -> {
+        foliaLib.getScheduler().runLater(() -> VersionUtil.getCurrentVersion().thenAccept(s -> {
             String pluginVersion = getDescription().getVersion();
             if (VersionUtil.isHigherVersion(pluginVersion, s)) {
                 logInfo("Plugin is outdated! Current version is "+ s +", but the installed version is "+ pluginVersion + "! You can update using /mb update");
             }
-        }));
+        }), 0L);
     }
 
     @Override
     public void onDisable() {
         unload();
-        Gui.disable();
     }
 
     private void unload() {
@@ -137,7 +140,7 @@ public class MineBlocksPlugin extends JavaPlugin {
     }
 
     public void saveConfiguration() {
-        getServer().getScheduler().runTaskAsynchronously(this, this::saveConfig);
+        foliaLib.getScheduler().runAsync(wrappedTask -> saveConfig());
     }
 
     public void closeAllGuis() {

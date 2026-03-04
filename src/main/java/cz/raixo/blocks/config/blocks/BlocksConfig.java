@@ -27,9 +27,11 @@ import java.util.*;
 
 public class BlocksConfig {
 
+    private final MineBlocksPlugin plugin;
     private final ConfigurationSection section;
 
-    public BlocksConfig(ConfigurationSection section) {
+    public BlocksConfig(MineBlocksPlugin plugin, ConfigurationSection section) {
+        this.plugin = plugin;
         this.section = section;
     }
 
@@ -51,13 +53,13 @@ public class BlocksConfig {
 
                 ConfigurationSection coolDownSection = blockSection.getConfigurationSection("timeout");
                 if (coolDownSection != null) {
-                    block.setCoolDown(getCoolDown(block, coolDownSection));
-                } else block.setCoolDown(new BlockCoolDown(block, -1, null, ""));
+                    block.setCoolDown(getCoolDown(plugin, block, coolDownSection));
+                } else block.setCoolDown(new BlockCoolDown(plugin, block, -1, null, ""));
 
                 ConfigurationSection resetOptSection = blockSection.getConfigurationSection("reset");
                 if (resetOptSection != null) {
                     block.setResetOptions(getResetOptions(block, resetOptSection));
-                } else block.setResetOptions(new ResetOptions(block, false, -1, ""));
+                } else block.setResetOptions(new ResetOptions(plugin, block, false, -1, ""));
 
                 ConfigurationSection messagesSection = blockSection.getConfigurationSection("messages");
                 if (messagesSection != null) {
@@ -103,6 +105,7 @@ public class BlocksConfig {
             );
         } else offset = null;
         return new BlockHologram(
+                plugin,
                 block,
                 offset,
                 section.getStringList("lines")
@@ -121,8 +124,9 @@ public class BlocksConfig {
         );
     }
 
-    private BlockCoolDown getCoolDown(MineBlock block, ConfigurationSection section) {
+    private BlockCoolDown getCoolDown(MineBlocksPlugin plugin, MineBlock block, ConfigurationSection section) {
         return new BlockCoolDown(
+                plugin,
                 block,
                 section.getInt("time", -1),
                 ConfigUtil.getMaterial(section.getString("type", "")),
@@ -132,6 +136,7 @@ public class BlocksConfig {
 
     private ResetOptions getResetOptions(MineBlock block, ConfigurationSection section) {
         return new ResetOptions(
+                plugin,
                 block,
                 section.getBoolean("onrestart", false),
                 section.getInt("inactive.time", -1),

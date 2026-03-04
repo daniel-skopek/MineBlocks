@@ -1,10 +1,10 @@
 package cz.raixo.blocks.managers;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import cz.raixo.blocks.MineBlocksPlugin;
 import cz.raixo.blocks.block.MineBlock;
 import cz.raixo.blocks.block.cooldown.BlockCoolDown;
 import cz.raixo.blocks.tasks.RespawnTask;
-import org.bukkit.Bukkit;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,8 +13,8 @@ import java.util.Map;
 public class RespawnTaskManager {
     private final MineBlocksPlugin plugin;
     private final Map<Integer, RespawnTask> scheduledTasks = new HashMap<>();
-    private final Map<Integer, Integer> taskIds = new HashMap<>();
-    private int schedulerTaskId;
+    private final Map<Integer, WrappedTask> taskList = new HashMap<>();
+    private WrappedTask schedulerTask;
 
     public RespawnTaskManager(MineBlocksPlugin plugin) {
         this.plugin = plugin;
@@ -25,24 +25,24 @@ public class RespawnTaskManager {
         int taskId = task.hashCode();
         scheduledTasks.put(taskId, task);
 
-        blockCoolDown.setRespawnTaskID(schedulerTaskId);
+        blockCoolDown.setRespawnTaskID(taskId);
 
-        if (schedulerTaskId == 0) {
-            schedulerTaskId = Bukkit.getScheduler().runTaskTimer(plugin, this::checkTasks, 20L, 20L).getTaskId();
+        if (schedulerTask == null) {
+            schedulerTask = plugin.getFoliaLib().getScheduler().runTimer(this::checkTasks, 20L, 20L);
         }
     }
 
     public void cancelTask(int taskId) {
-        Integer currentTaskId = taskIds.remove(taskId);
-        if (currentTaskId != null) {
-            Bukkit.getScheduler().cancelTask(currentTaskId);
+        WrappedTask currentTask = taskList.remove(taskId);
+        if (currentTask != null) {
+            plugin.getFoliaLib().getScheduler().cancelTask(currentTask);
         }
 
         scheduledTasks.remove(taskId);
 
         if (scheduledTasks.isEmpty()) {
-            Bukkit.getScheduler().cancelTask(schedulerTaskId);
-            schedulerTaskId = 0;
+            plugin.getFoliaLib().getScheduler().cancelTask(schedulerTask);
+            schedulerTask = null;
         }
     }
 
@@ -60,8 +60,8 @@ public class RespawnTaskManager {
         }
 
         if (scheduledTasks.isEmpty()) {
-            Bukkit.getScheduler().cancelTask(schedulerTaskId);
-            schedulerTaskId = 0;
+            plugin.getFoliaLib().getScheduler().cancelTask(schedulerTask);
+            schedulerTask = null;
         }
     }
 }
