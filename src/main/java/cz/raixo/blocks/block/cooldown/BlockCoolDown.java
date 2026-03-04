@@ -1,10 +1,10 @@
 package cz.raixo.blocks.block.cooldown;
 
+import cz.raixo.blocks.MineBlocksPlugin;
 import cz.raixo.blocks.block.MineBlock;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.util.Date;
@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 @Setter
 public class BlockCoolDown {
 
+    private MineBlocksPlugin plugin;
     @Getter(AccessLevel.NONE)
     private final MineBlock block;
     private int time;
@@ -24,7 +25,8 @@ public class BlockCoolDown {
     private ActiveCoolDown active;
     private Integer respawnTaskID = null;
 
-    public BlockCoolDown(MineBlock block, int time, Material typeOverride, String respawnMessage) {
+    public BlockCoolDown(MineBlocksPlugin plugin, MineBlock block, int time, Material typeOverride, String respawnMessage) {
+        this.plugin = plugin;
         this.block = block;
         this.time = time;
         this.typeOverride = typeOverride;
@@ -47,7 +49,7 @@ public class BlockCoolDown {
         this.active = new ActiveCoolDown(
                 end,
                 future,
-                Bukkit.getScheduler().runTaskTimer(block.getPlugin(), () -> block.getHologram().update(), 0, 20)
+                plugin.getFoliaLib().getScheduler().runTimer(() -> block.getHologram().update(), 0, 20)
         );
 
         block.getPlugin().getRespawnTaskManager().scheduleTask(this, block, end.getTime());

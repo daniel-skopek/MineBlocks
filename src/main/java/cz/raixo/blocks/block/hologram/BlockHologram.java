@@ -1,5 +1,6 @@
 package cz.raixo.blocks.block.hologram;
 
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import cz.raixo.blocks.MineBlocksPlugin;
 import cz.raixo.blocks.block.MineBlock;
 import cz.raixo.blocks.block.placeholder.BlockPlaceholderSet;
@@ -9,8 +10,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Location;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,6 +20,7 @@ import java.util.stream.Collectors;
 @Getter
 public class BlockHologram {
 
+    private final MineBlocksPlugin plugin;
     @Getter(AccessLevel.NONE)
     private final MineBlock block;
     private final Hologram hologram;
@@ -31,10 +31,11 @@ public class BlockHologram {
     @Getter(AccessLevel.NONE)
     private boolean shouldUpdate;
     @Getter(AccessLevel.NONE)
-    private BukkitTask updateTask;
+    private WrappedTask updateTask;
     private final int updateInterval;
 
-    public BlockHologram(MineBlock block, HologramOffset offset, List<String> lines) {
+    public BlockHologram(MineBlocksPlugin plugin, MineBlock block, HologramOffset offset, List<String> lines) {
+        this.plugin = plugin;
         this.block = block;
         this.offset = offset;
         this.lines = new LinkedList<>(lines);
@@ -81,7 +82,7 @@ public class BlockHologram {
             updateLines();
         } else {
             MineBlocksPlugin plugin = block.getPlugin();
-            plugin.getServer().getScheduler().runTask(plugin, this::updateLines);
+            plugin.getFoliaLib().getScheduler().runLater(wrappedTask -> updateLines(), 0L);
         }
     }
 
@@ -102,15 +103,13 @@ public class BlockHologram {
         if (b) {
             update();
             if (updateInterval > 0)
-                if (updateTask == null) updateTask = new BukkitRunnable() {
-                    @Override
-                    public void run() {
+                if (updateTask == null) {
+                    updateTask = plugin.getFoliaLib().getScheduler().runTimer(() -> {
                         if (shouldUpdate) {
                             updateLines();
                         }
-                    }
+                    }, 0, updateInterval);
                 }
-                        .runTaskTimer(block.getPlugin(), 0, updateInterval);
             hologram.setVisible(true);
         } else {
             if (updateTask != null) {

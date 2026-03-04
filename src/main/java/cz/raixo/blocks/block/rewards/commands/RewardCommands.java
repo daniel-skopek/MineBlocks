@@ -4,7 +4,6 @@ import cz.raixo.blocks.block.playerdata.PlayerData;
 import cz.raixo.blocks.block.rewards.commands.batch.BatchRewardCommands;
 import cz.raixo.blocks.block.rewards.commands.random.RandomRewardCommands;
 import cz.raixo.blocks.block.rewards.context.RewardContext;
-
 import org.bukkit.configuration.ConfigurationSection;
 
 import javax.annotation.Nullable;

@@ -2,6 +2,7 @@ package cz.raixo.blocks.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
+import com.tcoded.folialib.wrapper.task.WrappedTask;
 import cz.raixo.blocks.MineBlocksPlugin;
 import cz.raixo.blocks.block.MineBlock;
 import cz.raixo.blocks.block.cooldown.BlockCoolDown;
@@ -30,13 +31,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Optional;
 import java.util.*;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -155,7 +155,7 @@ public class MBCommand extends BaseCommand {
     @Subcommand("version")
     @CommandPermission("mb.admin.version")
     public void version(CommandSender sender) {
-        BukkitTask task = plugin.getServer().getScheduler().runTaskLater(plugin, () -> Colors.send(sender, "&7Fetching..."), 5);
+        WrappedTask task = plugin.getFoliaLib().getScheduler().runLater(() -> Colors.send(sender, "&7Fetching..."), 5);
         String pluginVersion = plugin.getDescription().getVersion();
         VersionUtil.shouldUpdate(plugin)
                         .thenAccept(s -> {
@@ -178,7 +178,7 @@ public class MBCommand extends BaseCommand {
     @Subcommand("update")
     @CommandPermission("mb.admin.update")
     public void update(CommandSender sender) {
-        BukkitTask task = plugin.getServer().getScheduler().runTaskLater(plugin, () -> Colors.send(sender, "&7Updating..."), 5);
+        WrappedTask task = plugin.getFoliaLib().getScheduler().runLater(() -> Colors.send(sender, "&7Updating..."), 5);
         VersionUtil.downloadLatest(plugin)
                 .thenAccept(fileStringResult -> {
                     task.cancel();
@@ -270,7 +270,7 @@ public class MBCommand extends BaseCommand {
                             block.setLocation(sender.getLocation().getBlock().getLocation());
                             block.setType(new BlockType(block, Material.DIAMOND_BLOCK));
                             block.setHealth(new BlockHealth(block, 100));
-                            block.setHologram(new BlockHologram(block, null, List.of(
+                            block.setHologram(new BlockHologram(plugin, block, null, List.of(
                                     "#ICON: %type%",
                                     "#2C74B3&lMINE BLOCKS",
                                     "#2C74B3&lᴛᴏᴘ",
@@ -281,8 +281,8 @@ public class MBCommand extends BaseCommand {
                                     "&7Break to get reward",
                                     "&c%timeout%"
                             )));
-                            block.setCoolDown(new BlockCoolDown(block, -1, null, ""));
-                            block.setResetOptions(new ResetOptions(block, false, -1, ""));
+                            block.setCoolDown(new BlockCoolDown(plugin, block, -1, null, ""));
+                            block.setResetOptions(new ResetOptions(plugin, block, false, -1, ""));
                             block.setMessages(new BlockMessages("&7Block was destroyed\n&7Your breaks: %breaks%"));
                             block.setRewards(new BlockRewards(block, new LinkedList<>(), new LinkedList<>()));
                             block.setRequiredTool(new RequiredTool(
@@ -383,7 +383,7 @@ public class MBCommand extends BaseCommand {
     }
 
     private void saveBlock(MineBlock block) {
-        plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> {
+        plugin.getFoliaLib().getScheduler().runAsync(wrappedTask -> {
             block.getPlugin().getConfiguration().getBlocksConfig().setBlock(block);
             block.getPlugin().saveConfiguration();
         });
