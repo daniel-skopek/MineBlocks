@@ -52,14 +52,17 @@ public class BlockCoolDown {
                 plugin.getFoliaLib().getScheduler().runTimer(() -> block.getHologram().update(), 0, 20)
         );
 
-        block.getPlugin().getRespawnTaskManager().scheduleTask(this, block, end.getTime());
+        this.respawnTaskID = block.getPlugin().getRespawnTaskManager().scheduleTask(this, block, end.getTime());
 
         return active;
     }
 
     public boolean deactivate() {
         if (!isActive()) return false;
-        block.getPlugin().getRespawnTaskManager().cancelTask(respawnTaskID);
+        if (respawnTaskID != null) {
+            block.getPlugin().getRespawnTaskManager().cancelTask(respawnTaskID);
+            this.respawnTaskID = null;
+        }
         active.getUpdateTask().cancel();
         active.getFuture().complete(null);
         block.getType().setOverride(null);

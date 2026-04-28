@@ -20,16 +20,16 @@ public class RespawnTaskManager {
         this.plugin = plugin;
     }
 
-    public void scheduleTask(BlockCoolDown blockCoolDown, MineBlock mineBlock, long executionTime) {
+    public Integer scheduleTask(BlockCoolDown blockCoolDown, MineBlock mineBlock, long executionTime) {
         RespawnTask task = new RespawnTask(blockCoolDown, mineBlock, executionTime);
         int taskId = task.hashCode();
         scheduledTasks.put(taskId, task);
 
-        blockCoolDown.setRespawnTaskID(taskId);
-
         if (schedulerTask == null) {
             schedulerTask = plugin.getFoliaLib().getScheduler().runTimer(this::checkTasks, 20L, 20L);
         }
+
+        return taskId;
     }
 
     public void cancelTask(int taskId) {
