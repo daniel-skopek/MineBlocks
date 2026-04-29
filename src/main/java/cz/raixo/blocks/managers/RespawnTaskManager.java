@@ -40,7 +40,7 @@ public class RespawnTaskManager {
 
         scheduledTasks.remove(taskId);
 
-        if (scheduledTasks.isEmpty()) {
+        if (scheduledTasks.isEmpty() && schedulerTask != null) {
             plugin.getFoliaLib().getScheduler().cancelTask(schedulerTask);
             schedulerTask = null;
         }
