@@ -54,8 +54,11 @@ public class RespawnTaskManager {
 
             if (currentTime >= task.getExecutionTime() - 1000) {
                 iterator.remove();
-                task.getBlockCoolDown().deactivate();
-                task.getMineBlock().broadcast(task.getBlockCoolDown().getRespawnMessage());
+
+                if (task.getBlockCoolDown().isActive()) {
+                    task.getMineBlock().broadcast(task.getBlockCoolDown().getRespawnMessage());
+                    task.getBlockCoolDown().deactivate();
+                }
             }
         }
 
