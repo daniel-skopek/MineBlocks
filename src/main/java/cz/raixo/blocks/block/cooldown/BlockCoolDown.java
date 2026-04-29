@@ -59,9 +59,10 @@ public class BlockCoolDown {
 
     public boolean deactivate() {
         if (!isActive()) return false;
-        if (respawnTaskID != null) {
-            block.getPlugin().getRespawnTaskManager().cancelTask(respawnTaskID);
-            this.respawnTaskID = null;
+        Integer taskId = this.respawnTaskID;
+        this.respawnTaskID = null;
+        if (taskId != null) {
+            block.getPlugin().getRespawnTaskManager().cancelTask(taskId);
         }
         active.getUpdateTask().cancel();
         active.getFuture().complete(null);
