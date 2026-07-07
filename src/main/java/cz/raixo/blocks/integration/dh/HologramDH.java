@@ -3,6 +3,7 @@ package cz.raixo.blocks.integration.dh;
 import eu.decentsoftware.holograms.api.DHAPI;
 import eu.decentsoftware.holograms.api.holograms.Hologram;
 import eu.decentsoftware.holograms.api.utils.Common;
+import eu.decentsoftware.holograms.api.utils.color.IridiumColorAPI;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextColor;
@@ -88,7 +89,7 @@ public class HologramDH implements cz.raixo.blocks.integration.models.hologram.H
 
     @Override
     public String stripColor(String value) {
-        return Common.stripColors(value);
+        return IridiumColorAPI.stripColorFormatting(value);
     }
 
 }
