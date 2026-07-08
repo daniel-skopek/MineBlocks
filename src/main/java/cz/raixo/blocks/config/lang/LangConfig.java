@@ -29,6 +29,10 @@ public class LangConfig {
         return config.getString("top.nobody-breaks", "0");
     }
 
+    public String getNotRanked() {
+        return config.getString("top.not_ranked", "Not ranked");
+    }
+
     public String getStatusTimeout() {
         return config.getString("status.timeout", "You can't destroy the block now!");
     }

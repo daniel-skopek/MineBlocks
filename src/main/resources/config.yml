@@ -1,9 +1,8 @@
-messages:
-  not_ranked: "not ranked" # nebo jakákoli jiná zpráva, kterou chcete použít
 lang:
   top:
     nobody: "&cNobody"
     nobody-breaks: "0"
+    not_ranked: "Not ranked"
   timeout:
     message: "%time%"
     max-units: 2

@@ -74,7 +74,7 @@ public class MineBlocksPlaceholders extends PlaceholderExpansion {
                 if (!coolDown.isActive()) return "";
                 return block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
             case "rank":
-                return getPlayerRank(block, player.getUniqueId()).map(String::valueOf).orElse(getNotRankedMessage());
+                return getPlayerRank(block, player.getUniqueId()).map(String::valueOf).orElse(plugin.getConfiguration().getLangConfig().getNotRanked());
             default: return null;
         }
     }
@@ -88,4 +88,5 @@ public class MineBlocksPlaceholders extends PlaceholderExpansion {
         }
         return Optional.empty();
     }
+
 }
