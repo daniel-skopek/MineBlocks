@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class MineBlocksPlaceholders extends PlaceholderExpansion {
@@ -72,8 +73,19 @@ public class MineBlocksPlaceholders extends PlaceholderExpansion {
                 BlockCoolDown coolDown = block.getCoolDown();
                 if (!coolDown.isActive()) return "";
                 return block.getPlugin().getConfiguration().getLangConfig().getTimeoutFormatted(coolDown.getActive().getEnd());
+            case "rank":
+                return getPlayerRank(block, player.getUniqueId()).map(String::valueOf).orElse(getNotRankedMessage());
             default: return null;
         }
     }
 
+    private Optional<Integer> getPlayerRank(MineBlock block, UUID playerUUID) {
+        List<PlayerData> topPlayers = block.getTop().getPlayers();
+        for (int i = 0; i < topPlayers.size(); i++) {
+            if (topPlayers.get(i).getUuid().equals(playerUUID)) {
+                return Optional.of(i + 1); // Rank is 1-based
+            }
+        }
+        return Optional.empty();
+    }
 }

@@ -1,3 +1,5 @@
+messages:
+  not_ranked: "not ranked" # nebo jakákoli jiná zpráva, kterou chcete použít
 lang:
   top:
     nobody: "&cNobody"
