@@ -12,6 +12,8 @@ import java.awt.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class IridiumColorAPI {
@@ -266,22 +268,11 @@ public class IridiumColorAPI {
         if (version.isEmpty()) {
             throw new RuntimeException("Cannot get major Minecraft version from null or empty string");
         }
-
-        // getVersion()
-        int index = version.lastIndexOf("MC:");
-        if (index != -1) {
-            version = version.substring(index + 4, version.length() - 1);
-        } else if (version.endsWith("SNAPSHOT")) {
-            // getBukkitVersion()
-            index = version.indexOf('-');
-            version = version.substring(0, index);
+        Matcher matcher = Pattern.compile("1\\.(\\d+)").matcher(version);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
         }
-
-        // 1.13.2, 1.14.4, etc...
-        int lastDot = version.lastIndexOf('.');
-        if (version.indexOf('.') != lastDot) version = version.substring(0, lastDot);
-
-        return Integer.parseInt(version.substring(2));
+        return 0;
     }
 
 }
