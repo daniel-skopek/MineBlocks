@@ -79,6 +79,7 @@ shadowJar {
     relocate 'de.themoep.minedown', 'cz.raixo.blocks.libs.minedown'
     relocate 'net.kyori.adventure', 'cz.raixo.blocks.libs.adventure'
     relocate 'net.kyori.examination', 'cz.raixo.blocks.libs.adventure.examination'
+    relocate 'net.kyori.option', 'cz.raixo.blocks.libs.adventure.option'
     relocate 'org.intellij', 'cz.raixo.blocks.libs.annotations.intellij'
     relocate 'org.jetbrains', 'cz.raixo.blocks.libs.annotations.jetbrains'
     relocate 'com.tcoded.folialib', "${project.group}.blocks.libs.folialib"
