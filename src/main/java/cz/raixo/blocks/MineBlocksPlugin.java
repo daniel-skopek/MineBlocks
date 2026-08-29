@@ -14,7 +14,6 @@ import cz.raixo.blocks.listener.BlocksListener;
 import cz.raixo.blocks.managers.RespawnTaskManager;
 import cz.raixo.blocks.menu.BlockMenu;
 import cz.raixo.blocks.menu.listener.EditListener;
-import cz.raixo.blocks.util.VersionUtil;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
@@ -90,12 +89,6 @@ public class MineBlocksPlugin extends JavaPlugin {
                         .collect(Collectors.joining(", "))
         );
         logInfo("MineBlocks enabled successfully!");
-        foliaLib.getScheduler().runLater(() -> VersionUtil.getCurrentVersion().thenAccept(s -> {
-            String pluginVersion = getDescription().getVersion();
-            if (VersionUtil.isHigherVersion(pluginVersion, s)) {
-                logInfo("Plugin is outdated! Current version is "+ s +", but the installed version is "+ pluginVersion + "! You can update using /mb update");
-            }
-        }), 0L);
     }
 
     @Override

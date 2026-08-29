@@ -2,7 +2,6 @@ package cz.raixo.blocks.commands;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.*;
-import com.tcoded.folialib.wrapper.task.WrappedTask;
 import cz.raixo.blocks.MineBlocksPlugin;
 import cz.raixo.blocks.block.MineBlock;
 import cz.raixo.blocks.block.cooldown.BlockCoolDown;
@@ -16,7 +15,6 @@ import cz.raixo.blocks.block.tool.Result;
 import cz.raixo.blocks.block.type.BlockType;
 import cz.raixo.blocks.config.blocks.BlocksConfig;
 import cz.raixo.blocks.menu.edit.EditMenu;
-import cz.raixo.blocks.util.VersionUtil;
 import cz.raixo.blocks.util.color.Colors;
 import de.themoep.minedown.adventure.MineDown;
 import net.kyori.adventure.audience.Audience;
@@ -37,7 +35,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @CommandAlias("mb|mineblocks")
@@ -92,8 +89,6 @@ public class MBCommand extends BaseCommand {
         Colors.send(sender,
                 "#205295&lMineBlocks help menu:",
                 baseCommand + "reload &7Reloads plugin configuration and all blocks",
-                baseCommand + "version &7Shows version of installed plugin",
-                baseCommand + "update &7Updates plugin to latest version",
                 baseCommand + "wiki &7Shows link to official wiki page",
                 baseCommand + "create <block> &7Creates new mineblock on your position",
                 baseCommand + "edit <block> &7Opens menu where you can edit specified block",
@@ -152,41 +147,9 @@ public class MBCommand extends BaseCommand {
         ));
     }
 
-    @Subcommand("version")
-    @CommandPermission("mb.admin.version")
-    public void version(CommandSender sender) {
-        WrappedTask task = plugin.getFoliaLib().getScheduler().runLater(() -> Colors.send(sender, "&7Fetching..."), 5);
-        String pluginVersion = plugin.getDescription().getVersion();
-        VersionUtil.shouldUpdate(plugin)
-                        .thenAccept(s -> {
-                            task.cancel();
-                            if (s == null) {
-                                Colors.send(sender, "#2C74B3Version of installed plugin is "+ pluginVersion);
-                            } else if (s.isPresent()) {
-                                Colors.send(sender, "#DF2E38Plugin is outdated! Current version is "+ s.get() +", but the installed version is "+ pluginVersion + "!");
-                            } else {
-                                Colors.send(sender, "#2C74B3Plugin is up to date with version "+ pluginVersion + "!");
-                            }
-                        }).completeOnTimeout(null, 3, TimeUnit.SECONDS);
-    }
-
     @Subcommand("wiki")
     public void wiki(CommandSender sender) {
         Colors.send(sender, "#2C74B3MineBlocks wiki is available at https://mb.raixo.cz/");
-    }
-
-    @Subcommand("update")
-    @CommandPermission("mb.admin.update")
-    public void update(CommandSender sender) {
-        WrappedTask task = plugin.getFoliaLib().getScheduler().runLater(() -> Colors.send(sender, "&7Updating..."), 5);
-        VersionUtil.downloadLatest(plugin)
-                .thenAccept(fileStringResult -> {
-                    task.cancel();
-                    fileStringResult.ifSuccessfulOrElse(
-                            file -> Colors.send(sender, "#2C74B3Plugin saved as " + file.getName() + ", restart your server to update it"),
-                            s -> Colors.send(sender, "#DF2E38" + s)
-                    );
-                });
     }
 
     @Subcommand("reset")

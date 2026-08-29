@@ -4,7 +4,6 @@ import cz.raixo.blocks.MineBlocksPlugin;
 import cz.raixo.blocks.block.MineBlock;
 import cz.raixo.blocks.block.tool.RequiredTool;
 import cz.raixo.blocks.config.options.NotificationType;
-import cz.raixo.blocks.util.VersionUtil;
 import cz.raixo.blocks.util.color.Colors;
 import org.bukkit.Sound;
 import org.bukkit.command.CommandSender;
@@ -101,16 +100,6 @@ public class BlocksListener implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
-        if (player.hasPermission("mb.admin")) {
-            VersionUtil.shouldUpdate(plugin).thenAccept(s -> {
-                if (s.isPresent()) {
-                    Colors.send(player,
-                            "&7Plugin #2C74B3MineBlocks &7is outdated! Please update it by using #2C74B3/mb update&7!"
-                    );
-                }
-            });
-        }
         if (plugin.getConfiguration().getOptionsConfig().hasOfflineRewards())
             plugin.getFoliaLib().getScheduler().runAsync(wrappedTask -> {
                 try {
