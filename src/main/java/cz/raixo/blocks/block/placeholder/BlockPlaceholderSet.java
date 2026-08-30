@@ -6,6 +6,7 @@ import cz.raixo.blocks.block.playerdata.PlayerData;
 import cz.raixo.blocks.block.top.BlockTop;
 import cz.raixo.blocks.config.MineBlocksConfig;
 import cz.raixo.blocks.integration.models.prefix.PrefixProvider;
+import cz.raixo.blocks.util.NumberUtil;
 import cz.raixo.blocks.util.placeholders.PlaceholderSet;
 
 public class BlockPlaceholderSet extends PlaceholderSet {
@@ -38,8 +39,8 @@ public class BlockPlaceholderSet extends PlaceholderSet {
             }
         }
         addPlaceholder("type", () -> String.valueOf(block.getType().getType()));
-        addPlaceholder("health", () -> String.valueOf(block.getHealth().getHealth()));
-        addPlaceholder("max_health", () -> String.valueOf(block.getHealth().getMaxHealth()));
+        addPlaceholder("health", () -> NumberUtil.format(block.getHealth().getHealth()));
+        addPlaceholder("max_health", () -> NumberUtil.format(block.getHealth().getMaxHealth()));
         addPlaceholder("timeout", () -> {
             BlockCoolDown coolDown = block.getCoolDown();
             if (!coolDown.isActive()) return "";
