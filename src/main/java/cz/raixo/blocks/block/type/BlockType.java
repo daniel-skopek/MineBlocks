@@ -31,7 +31,7 @@ public class BlockType {
     }
 
     public void update() {
-        block.getLocation().getBlock().setType(get(), false);
+        block.runAtLocation(() -> block.getLocation().getBlock().setType(get(), false));
         block.getHologram().update();
     }
 

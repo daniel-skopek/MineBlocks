@@ -83,8 +83,12 @@ public class MineBlock {
 
     public void hide() {
         hologram.hide();
-        getLocation().getBlock().setType(Material.AIR, false);
+        runAtLocation(() -> getLocation().getBlock().setType(Material.AIR, false));
         coolDown.deactivate();
+    }
+
+    public void runAtLocation(Runnable runnable) {
+        plugin.getFoliaLib().getScheduler().runAtLocation(location, wrappedTask -> runnable.run());
     }
 
     public void destroy() {
