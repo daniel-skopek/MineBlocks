@@ -88,6 +88,10 @@ public class MineBlock {
     }
 
     public void runAtLocation(Runnable runnable) {
+        if (!plugin.isEnabled()) {
+            runnable.run();
+            return;
+        }
         plugin.getFoliaLib().getScheduler().runAtLocation(location, wrappedTask -> runnable.run());
     }
 
