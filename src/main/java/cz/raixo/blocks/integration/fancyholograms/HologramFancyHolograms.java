@@ -57,11 +57,13 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
         }
         lines.set(line, toMiniMessage(text));
         data.setText(lines);
+        refresh();
     }
 
     @Override
     public void setLines(List<String> lines) {
         data.setText(lines.stream().map(this::toMiniMessage).collect(Collectors.toList()));
+        refresh();
     }
 
     @Override
