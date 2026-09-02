@@ -114,7 +114,7 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
     }
 
     private String toMiniMessage(String value) {
-        return MINI_MESSAGE.serialize(LEGACY_SERIALIZER.deserialize(toLegacy(value)));
+        return MINI_MESSAGE.serialize(LEGACY_SERIALIZER.deserialize(toLegacy(value))) + "<reset>";
     }
 
     private String toLegacy(String value) {
