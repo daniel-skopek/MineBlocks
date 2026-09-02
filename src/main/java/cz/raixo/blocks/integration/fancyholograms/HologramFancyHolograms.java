@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class HologramFancyHolograms implements cz.raixo.blocks.integration.models.hologram.Hologram {
 
-    private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("(?i)#([0-9a-f]{6})");
+    private static final Pattern HEX_COLOR_PATTERN = Pattern.compile("(?i)&?#([0-9a-f]{6})");
     private static final LegacyComponentSerializer LEGACY_SERIALIZER = LegacyComponentSerializer.legacySection();
     private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
 
@@ -117,8 +117,7 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
     }
 
     private String toLegacy(String value) {
-        String result = value.replace('&', '\u00A7');
-        Matcher matcher = HEX_COLOR_PATTERN.matcher(result);
+        Matcher matcher = HEX_COLOR_PATTERN.matcher(value);
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
             StringBuilder legacyHex = new StringBuilder("\u00A7x");
@@ -128,7 +127,7 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
             matcher.appendReplacement(buffer, Matcher.quoteReplacement(legacyHex.toString()));
         }
         matcher.appendTail(buffer);
-        return buffer.toString();
+        return buffer.toString().replace('&', '§');
     }
 
 }
