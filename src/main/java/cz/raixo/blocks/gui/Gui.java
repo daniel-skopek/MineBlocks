@@ -25,8 +25,10 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,6 +40,8 @@ public class Gui<T extends GuiFiller<T>> implements InventoryHolder {
     private static final ItemStack AIR = new ItemStack(Material.AIR);
     public static final LegacyComponentSerializer COMPONENT_SERIALIZER = BukkitComponentSerializer.legacy();
     public static final ScheduledExecutorService SCHEDULER = Executors.newSingleThreadScheduledExecutor();
+    private static final Set<Gui<?>> OPEN_GUIS = ConcurrentHashMap.newKeySet();
+
     public static void enable(MineBlocksPlugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new GuiListener(), plugin);
         Gui.plugin = plugin;
@@ -46,6 +50,10 @@ public class Gui<T extends GuiFiller<T>> implements InventoryHolder {
     public static void runSync(Runnable runnable) {
         if (Bukkit.isPrimaryThread()) runnable.run();
         else plugin.getFoliaLib().getScheduler().runLater(wrappedTask -> runnable.run(), 0L);
+    }
+
+    public static Collection<Gui<?>> getOpenGuis() {
+        return OPEN_GUIS;
     }
 
     private final GuiMeta<T> meta;
@@ -146,6 +154,7 @@ public class Gui<T extends GuiFiller<T>> implements InventoryHolder {
 
     public void addViewer(Player player) {
         this.viewers.add(player);
+        OPEN_GUIS.add(this);
         startUpdating();
     }
 
@@ -153,6 +162,7 @@ public class Gui<T extends GuiFiller<T>> implements InventoryHolder {
         this.viewers.remove(player);
         if (viewers.isEmpty()) {
             stopUpdating();
+            OPEN_GUIS.remove(this);
         }
     }
 

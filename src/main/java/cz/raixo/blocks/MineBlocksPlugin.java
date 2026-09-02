@@ -12,12 +12,10 @@ import cz.raixo.blocks.gui.Gui;
 import cz.raixo.blocks.integration.IntegrationManager;
 import cz.raixo.blocks.listener.BlocksListener;
 import cz.raixo.blocks.managers.RespawnTaskManager;
-import cz.raixo.blocks.menu.BlockMenu;
 import cz.raixo.blocks.menu.listener.EditListener;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -137,9 +136,9 @@ public class MineBlocksPlugin extends JavaPlugin {
     }
 
     public void closeAllGuis() {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.getOpenInventory().getTopInventory().getHolder() instanceof BlockMenu<?>) {
-                onlinePlayer.closeInventory();
+        for (Gui<?> gui : new ArrayList<>(Gui.getOpenGuis())) {
+            for (Player viewer : new ArrayList<>(gui.getViewers())) {
+                viewer.closeInventory();
             }
         }
     }
