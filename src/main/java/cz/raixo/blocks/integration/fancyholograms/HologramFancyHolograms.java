@@ -12,6 +12,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Display;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
         data.setPersistent(false);
         data.setFilePath("mineblocks/" + name);
         data.setVisibility(Visibility.MANUAL);
+        data.setBillboard(Display.Billboard.VERTICAL);
         this.hologram = fancyHolograms.getHologramFactory().apply(data);
         this.registered = false;
     }
