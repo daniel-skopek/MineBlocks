@@ -37,6 +37,8 @@ repositories {
     maven { url = 'https://oss.sonatype.org/content/repositories/snapshots' }
     maven { url = 'https://oss.sonatype.org/content/repositories/central' }
     maven { url = 'https://repo.codemc.io/repository/creatorfromhell/' }
+    maven { url = 'https://repo.fancyinnovations.com/releases' }
+    maven { url = 'https://repo.fancyinnovations.com/snapshots' }
 }
 
 dependencies {
@@ -48,11 +50,13 @@ dependencies {
     compileOnly 'io.papermc:paperlib:1.0.7'
     compileOnly 'net.essentialsx:EssentialsX:2.20.1'
     compileOnly 'com.github.decentsoftware-eu.decentholograms:plugin:2.10.1'
+    compileOnly 'de.oliver:FancyHolograms:3.0.0-SNAPSHOT.4'
     compileOnly 'me.clip:placeholderapi:2.12.2'
     compileOnly 'net.luckperms:api:5.5'
     compileOnly fileTree(dir: './libs', include: '*.jar')
 
     implementation 'net.kyori:adventure-platform-bukkit:4.4.1'
+    implementation 'net.kyori:adventure-text-minimessage:4.21.0'
     implementation "co.aikar:acf-bukkit:0.5.1-SNAPSHOT"
     implementation 'de.themoep:minedown-adventure:1.7.5'
     implementation 'com.tcoded:FoliaLib:0.5.2'
@@ -97,6 +101,7 @@ bukkit {
     load = "POSTWORLD"
     softDepend = [
         "DecentHolograms",
+        "FancyHolograms",
         "PlaceholderAPI",
         "LuckPerms",
         "CMI",

@@ -5,6 +5,7 @@ import cz.raixo.blocks.integration.afkplus.AfkPlusIntegration;
 import cz.raixo.blocks.integration.cmi.CMIIntegration;
 import cz.raixo.blocks.integration.dh.DHIntegration;
 import cz.raixo.blocks.integration.essentials.EssIntegration;
+import cz.raixo.blocks.integration.fancyholograms.FancyHologramsIntegration;
 import cz.raixo.blocks.integration.luckperms.LPIntegration;
 import cz.raixo.blocks.integration.models.afk.AfkProvider;
 import cz.raixo.blocks.integration.models.hologram.HologramProvider;
@@ -30,6 +31,7 @@ public class IntegrationManager implements PlaceholderProvider {
 
     static {
         INTEGRATION_REGISTRY.put(DHIntegration.PLUGIN_NAME, DHIntegration::new);
+        INTEGRATION_REGISTRY.put(FancyHologramsIntegration.PLUGIN_NAME, FancyHologramsIntegration::new);
         INTEGRATION_REGISTRY.put(CMIIntegration.PLUGIN_NAME, CMIIntegration::new);
         INTEGRATION_REGISTRY.put(LPIntegration.PLUGIN_NAME, LPIntegration::new);
         INTEGRATION_REGISTRY.put(EssIntegration.PLUGIN_NAME, EssIntegration::new);
