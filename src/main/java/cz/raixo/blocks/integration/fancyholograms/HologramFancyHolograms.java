@@ -38,6 +38,7 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
         registry.get(name).ifPresent(registry::unregister);
         this.data = new TextHologramData(name, location);
         data.setPersistent(false);
+        data.setFilePath("mineblocks/" + name);
         data.setVisibility(Visibility.MANUAL);
         this.hologram = fancyHolograms.getHologramFactory().apply(data);
         this.registered = false;
