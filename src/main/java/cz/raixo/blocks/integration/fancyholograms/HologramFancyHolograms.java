@@ -13,9 +13,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -49,6 +51,7 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
     @Override
     public void setLocation(Location location) {
         data.setLocation(location);
+        refresh();
     }
 
     @Override
@@ -70,8 +73,12 @@ public class HologramFancyHolograms implements cz.raixo.blocks.integration.model
 
     @Override
     public void refresh() {
-        if (registered) {
-            controller.refreshHologram(hologram, Bukkit.getOnlinePlayers());
+        if (!registered) return;
+        for (UUID uuid : hologram.getViewers()) {
+            Player player = Bukkit.getPlayer(uuid);
+            if (player != null) {
+                hologram.updateFor(player);
+            }
         }
     }
 
